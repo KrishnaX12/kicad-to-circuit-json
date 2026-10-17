@@ -10,6 +10,7 @@ import {
   isPcbAnnotationRenderLayer,
   mapKicadLayerToPcbRenderLayer,
 } from "../layer-mapping"
+import { createFootprintCopperPoly } from "./create-footprint-copper-poly"
 import { mapTextLayer } from "./layer-utils"
 
 function insertFootprintRoute(options: {
@@ -608,6 +609,10 @@ export function createFootprintPoly(params: {
   if (!ctx.k2cMatPcb) return
 
   const renderLayer = mapKicadLayerToPcbRenderLayer(poly.layer)
+  if (renderLayer?.endsWith("_copper")) {
+    createFootprintCopperPoly(params)
+    return
+  }
   if (!isPcbAnnotationRenderLayer(renderLayer)) return
 
   // Extract points
